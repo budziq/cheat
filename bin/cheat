@@ -5,6 +5,7 @@
 Usage:
   cheat <cheatsheet>
   cheat -e <cheatsheet>
+  cheat -n <cheatsheet> [<line_range>]
   cheat -s <keyword>
   cheat -l
   cheat -d
@@ -25,12 +26,14 @@ Examples:
 Options:
   -d --directories  List directories on CHEATPATH
   -e --edit         Edit cheatsheet
+  -n --number       Enumerate cheatsheet entries or print n'th
   -l --list         List cheatsheets
   -s --search       Search cheatsheets for <keyword>
   -v --version      Print the version number
 """
 
 # require the dependencies
+from __future__ import print_function
 from cheat import *
 from cheat.utils import *
 from docopt import docopt
@@ -51,6 +54,12 @@ if __name__ == '__main__':
     # create/edit cheatsheet
     elif options['--edit']:
         sheet.create_or_edit(options['<cheatsheet>'])
+
+    # enumerate cheatsheet entries
+    elif options['--number']:
+        print(sheet.enumerate_entries(
+                    options['<cheatsheet>'],
+                    options['<line_range>']), end='')
 
     # search among the cheatsheets
     elif options['--search']:

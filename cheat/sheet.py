@@ -86,3 +86,23 @@ def read(sheet):
 
     with open (path(sheet)) as cheatfile:
           return cheatfile.read()
+
+
+def enumerate_entries(sheet, range_text):
+    """ Returns the contents of the cheatsheet as a String with entries
+    preceded by line numbers. If line number range is given return only
+    the entries requested lines without comment and blank lines. """
+
+    if not exists(sheet):
+        die('No cheatsheet found for ' + sheet)
+
+    with open(path(sheet)) as cheatfile:
+        lines = enumerate_if(is_command, cheatfile.readlines())
+        line_range = parse_range(range_text)
+        if line_range:
+            # print just uncolored raw lines in given ranges
+            lines = [line for num, line in lines if num in line_range]
+        else:
+            # print colored lines prepended with line numbers
+            lines = [colorize(number_line(num, line)) for num, line in lines]
+        return ''.join(lines)

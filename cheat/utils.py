@@ -63,3 +63,43 @@ def prompt_yes_or_no(question):
 def warn(message):
     """ Prints a message to stderr """
     print((message), file=sys.stderr)
+
+
+def is_command(line):
+    """test if text line has any text that is not comment and whitespace"""
+    line = line.strip()
+    return line and not line.startswith('#')
+
+
+def enumerate_if(cond, sequence, start=0):
+    """conditional version of std library enumerate"""
+    count = start
+    for elem in sequence:
+        if cond(elem):
+            yield count, elem
+            count += 1
+        else:
+            yield None, elem
+
+
+def number_line(num, line):
+    """reformat line if there is additional sequence number"""
+    if num is not None:
+        return '({NUM}) {LINE}'.format(NUM=num, LINE=line)
+    return line
+
+
+def parse_range(text):
+    """parse text in page printer like algorithm to generate int ranges"""
+    res = set()
+    if not text:
+        return res
+
+    for item in text.split(','):
+        beg, _, end = item.partition('-')
+        if beg.isdigit():
+            if end.isdigit():
+                res = res.union(range(int(beg), int(end)+1))
+            else:
+                res.add(int(beg))
+    return res
